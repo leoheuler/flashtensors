@@ -28,10 +28,9 @@ pip install flashtensors
 
 ## 🔧 Getting Started  
 
-```python
-import flashtensors as flash
+``` Python
+from flashtensors import flash
 
-# A sample model
 class SimpleModel(nn.Module):
     def __init__(self, size=(3,3)):
         super(SimpleModel, self).__init__()
