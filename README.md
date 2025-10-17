@@ -26,6 +26,37 @@ pip install flashtensors
 
 ---
 
+## 🔧 Getting Started  
+
+```bash
+import flashtensors as flash
+
+# A sample model
+class SimpleModel(nn.Module):
+    def __init__(self, size=(3,3)):
+        super(SimpleModel, self).__init__()
+        # Create a single parameter tensor of shape (3, 3)
+        self.weight = nn.Parameter(torch.randn(*size))
+        
+    def forward(self, x):
+        return x @ self.weight  # Simple matrix multiplication
+
+model = SimpleModel()
+
+state_dict = model.state_dict()
+
+# Save your state dict
+flash.save_dict(state_dict, "/your/model/folder")
+
+
+# Load your state dict blazing fast
+device_map =  {"":0}
+new_state_dict = flash.load_dict("/your/model/folder", device_map)
+
+```
+
+---
+
 
 ## 📊 Benchmarks  
 
