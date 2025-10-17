@@ -19,7 +19,7 @@
 
 Traditional model loaders slow down your workflow with painful startup times. flashtensors was built from the ground up to eliminate bottlenecks and maximize performance.  
 
-- ⚡ ** Up to 10x faster** than standard loaders  
+- ⚡ **Up to 10x faster** than standard loaders  
 - ⏱ **Coldstarts < 2 seconds**
 
 The result: An inference engine that scales by users not by model.
