@@ -20,7 +20,12 @@
 Traditional model loaders slow down your workflow with painful startup times. flashtensors was built from the ground up to eliminate bottlenecks and maximize performance.  
 
 - ⚡ **10x faster** than standard loaders  
-- ⏱ **Coldstarts < 2 seconds** 
+- ⏱ **Coldstarts < 2 seconds**
+
+The result: An inference engine that scales by users not by model.
+
+- Host hundreds of models in a single device, and hotswap them on demand with low to none effect on user experience.
+- Run Agentic workflows on constrained devices (like robots, wearables, etc)
 
 ---
 
@@ -80,6 +85,7 @@ flashtensors drastically reduces coldstart times compared to alternative loaders
 (Results measured on H100 GPUs using NVLink)
 ⚡ **Average speedup: ~4–6× faster model loads**  
 Coldstarts stay consistently under **5 seconds**, even for **32B parameter models**.  
+
 
 <br>
 <br>
