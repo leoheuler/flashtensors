@@ -28,7 +28,7 @@ pip install flashtensors
 
 ## 🔧 Getting Started  
 
-```bash
+```python
 import flashtensors as flash
 
 # A sample model
