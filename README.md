@@ -31,7 +31,7 @@ pip install flashtensors
 
 Flash Tensors drastically reduces coldstart times compared to alternative loaders like safetensors.  
 
-| Model            | flashtensors ⚡ (s) | safetensors (s) | Speedup |
+| Model            | flashtensors ⚡ (s) | safetensors (w mmap) (s) | Speedup |
 |------------------|------------|----------|---------|
 | Qwen/Qwen3-0.6B  | **2.74**   | 11.68    | ~4.3×   |
 | Qwen/Qwen3-4B    | **2.26**   | 8.54     | ~3.8×   |
