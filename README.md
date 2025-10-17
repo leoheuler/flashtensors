@@ -8,7 +8,7 @@
 
 ```
 
-> A blazing-fast storage engine that loads models **up to 10x faster** than alternative loaders.  
+> A blazing-fast inference engine that loads models **up to 10x faster** than alternative loaders.  
 > Load large models in **< 2 seconds**.  
 
 ---
