@@ -105,11 +105,11 @@ for output in outputs:
     print()
 
 # Step 5: Clean up GPU memory
-teil.cleanup_gpu()
+ft.cleanup_gpu()
 
 # Step 6: Show model information
 print("\n📊 Model information:")
-info = teil.get_model_info(model_id)
+info = ft.get_model_info(model_id)
 if info:
     print(f"   Model ID: {info['model_id']}")
     print(f"   Backend: {info['backend']}")
@@ -118,7 +118,7 @@ if info:
 
 # Step 7: List all models
 print("\n📋 All available models:")
-models = teil.list_models()
+models = ft.list_models()
 for model_key, model_info in models.items():
     print(f"   {model_key}: {model_info['size'] / (1024**3):.2f} GB")
 
