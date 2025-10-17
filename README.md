@@ -38,12 +38,16 @@ Flash Tensors drastically reduces coldstart times compared to alternative loader
 | Qwen/Qwen3-8B    | **2.57**   | 9.08     | ~3.5×   |
 | Qwen/Qwen3-14B   | **3.02**   | 12.91    | ~4.3×   |
 | Qwen/Qwen3-32B   | **4.08**   | 24.05    | ~5.9×   |
-
+(Results measured on H100 GPUs using NVLink)
 ⚡ **Average speedup: ~4–6× faster model loads**  
 Coldstarts stay consistently under **5 seconds**, even for **32B parameter models**.  
 
 
-(Results measured on H100 GPUs using NVLink)
+
+
+
+
+
 
 
 
