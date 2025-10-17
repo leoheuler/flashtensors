@@ -1,4 +1,4 @@
-# ⚡ FlashTensors  
+# ⚡ flashtensors  
 
 > A blazing-fast storage engine that loads models **up to 10x faster** than alternative loaders.  
 > Load large models in **< 2 seconds**.  
@@ -7,9 +7,9 @@
 
 
 
-## 🚀 Why Flash Tensors?  
+## 🚀 Why flashtensors?  
 
-Traditional model loaders slow down your workflow with painful startup times. Flash Tensors was built from the ground up to eliminate bottlenecks and maximize performance.  
+Traditional model loaders slow down your workflow with painful startup times. flashtensors was built from the ground up to eliminate bottlenecks and maximize performance.  
 
 - ⚡ **10x faster** than standard loaders  
 - ⏱ **Coldstarts < 2 seconds** 
