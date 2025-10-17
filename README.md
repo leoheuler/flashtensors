@@ -41,8 +41,8 @@ pip install flashtensors
 
 ## 🔧 Getting Started  
 
-### VLLM
-```
+### vllm
+``` Python
 import flashtensors as ft
 import time
 
