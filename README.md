@@ -24,7 +24,7 @@ Traditional model loaders slow down your workflow with painful startup times. fl
 
 The result: An inference engine that scales by users not by model.
 
-- Host hundreds of models in a single device, and hotswap them on demand with low to none effect on user experience.
+- Host hundreds of models in a single device, and hot-swap them on demand with low to none effect on user experience.
 - Run Agentic workflows on constrained devices (like robots, wearables, etc)
 
 ---
