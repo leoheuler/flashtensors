@@ -1,0 +1,30 @@
+pybind11
+setuptools
+wheel
+cmake
+vllm==0.10.2
+huggingface_hub
+huggingface_hub[hf-xet]
+transformers>=4.37.2
+accelerate>=0.20.0
+grpcio
+protobuf
+peft==0.8.2
+psutil
+
+supervisor
+
+#torch
+
+# CLI
+click==8.1.8
+rich==14.0.0
+prompt_toolkit==3.0.43
+appdirs>=1.4.4
+
+# Audio Examples
+librosa
+scipy
+#sounddevice
+
+gputil

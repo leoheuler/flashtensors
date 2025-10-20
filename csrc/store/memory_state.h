@@ -1,0 +1,11 @@
+#pragma once
+
+enum MemoryState : int {
+  UNINITIALIZED,
+  UNALLOCATED,
+  ALLOCATED,
+  LOADING,
+  LOADED,
+  CANCELLED = 100,
+  INTERRUPTED = 101
+};
