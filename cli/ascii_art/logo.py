@@ -1,7 +1,7 @@
 from rich.text import Text
 from cli.styles.colors import ASCII_ART_GRADIENT
 
-TEIL = """
+FLASH_LOGO = """
 ████████╗██╗      █████╗ ███████╗██╗  ██╗████████╗███████╗███╗   ██╗███████╗ ██████╗ ██████╗ ███████╗
 ██╔═════╝██║     ██╔══██╗██╔════╝██║  ██║╚══██╔══╝██╔════╝████╗  ██║██╔════╝██╔═══██╗██╔══██╗██╔════╝
 █████╗   ██║     ███████║███████╗███████║   ██║   █████╗  ██╔██╗ ██║███████╗██║   ██║██████╔╝███████╗
@@ -11,9 +11,9 @@ TEIL = """
 
 
 def create_gradient_title(
-    ascii_art: str = TEIL, colors: list = ASCII_ART_GRADIENT
+    ascii_art: str = FLASH_LOGO, colors: list = ASCII_ART_GRADIENT
 ) -> Text:
-    """Create the Teil gradient title with high-resolution ASCII art and horizontal gradient"""
+    """Create the Flash Tensors gradient title with high-resolution ASCII art and horizontal gradient"""
 
     lines = ascii_art.split("\n")
     gradient_ascii = Text()

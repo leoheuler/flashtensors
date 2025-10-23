@@ -63,7 +63,7 @@ def init_logger(name: str):
 
 def set_log_level(level: str):
     """
-    Set the log level for all TeilEngine loggers.
+    Set the log level for all FlashEngine loggers.
 
     Args:
         level: Log level string ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL")

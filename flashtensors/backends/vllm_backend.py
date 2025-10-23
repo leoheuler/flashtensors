@@ -202,7 +202,7 @@ class VLLMBackend(BaseBackend):
             
             llm = LLM(
                 model=model_path,
-                load_format="teil",
+                load_format="flashtensors",
                 dtype=dtype,
                 gpu_memory_utilization=gpu_memory_utilization,
                 trust_remote_code=True,

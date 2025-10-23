@@ -1,5 +1,5 @@
 """
-Teil CLI Commands Package
+Flash Tensors CLI Commands Package
 
 This package contains all the CLI commands organized in a modular way.
 Each command should be in its own file and registered in __init__.py

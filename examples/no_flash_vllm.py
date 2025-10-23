@@ -38,8 +38,8 @@ def main():
     
     # Model configuration
     model_id = "Qwen/Qwen3-0.6B"
-    
-    # vLLM configuration parameters (matching TeilEngine config as much as possible)
+
+    # vLLM configuration parameters (matching FlashEngine config as much as possible)
     gpu_memory_utilization = 0.8
     dtype = "bfloat16"
     
@@ -87,7 +87,7 @@ def main():
         print(f"❌ Failed to load model: {e}")
         return
     
-    # Step 2: Run inference (same prompts as TeilEngine version)
+    # Step 2: Run inference (same prompts as FlashEngine version)
     print("\n🤖 Running inference...")
     prompts = [
         "Hello, my name is",

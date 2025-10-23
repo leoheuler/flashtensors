@@ -188,7 +188,7 @@ install_requires = fetch_requirements("requirements.txt")
 setup(
     name="flashtensors",
     version="0.1.0",
-    author="Teil Engine Team",
+    author="Flash Tensors Team",
     author_email="team@flashtensors.com",
     description="Ultra-fast AI model loading library with CUDA acceleration",
     long_description=read_readme(),
@@ -223,7 +223,7 @@ setup(
     keywords="AI, machine learning, model loading, CUDA, GPU acceleration",
     entry_points={
         'console_scripts': [
-            'teil=cli.teil:cli',
+            'flash=cli.flash:cli',
         ],
     },
 )

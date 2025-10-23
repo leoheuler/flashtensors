@@ -1,5 +1,5 @@
 """
-Models command for listing available and downloaded models in the Teil CLI.
+Models command for listing available and downloaded models in the Flash Tensors CLI.
 """
 
 import click
@@ -10,7 +10,7 @@ from cli.commands.base import BaseCommand, InteractiveCommandMixin
 
 
 class ModelsCommand(BaseCommand, InteractiveCommandMixin):
-    """Handle model listing in the Teil CLI."""
+    """Handle model listing in the Flash Tensors CLI."""
 
     def __init__(self):
         super().__init__()

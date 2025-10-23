@@ -48,12 +48,12 @@ def show_startup_screen():
         Text.assemble(
             ("1. ", PARAGRAPH),
             ("auth", f"bold {COMMAND}"),
-            (" - Authenticate with Teil", PARAGRAPH),
+            (" - Authenticate with Flash Tensors", PARAGRAPH),
         ),
         Text.assemble(
             ("2. ", PARAGRAPH),
             ("engine start", f"bold {COMMAND}"),
-            (" - Start Teil engine", PARAGRAPH),
+            (" - Start Flash Tensors engine", PARAGRAPH),
         ),
         Text.assemble(
             ("3. ", PARAGRAPH),
@@ -106,9 +106,9 @@ def show_startup_screen():
 @click.option("--version", is_flag=True, help="Show version information")
 @click.pass_context
 def cli(ctx, version):
-    """Teil CLI - Your AI-powered development assistant"""
+    """Flash Tensors CLI - Your AI-powered development assistant"""
     if version:
-        console.print("Teil-cli v2.5-pro (99% context left)")
+        console.print("Flash Tensors CLI v2.5-pro (99% context left)")
         return
 
     if ctx.invoked_subcommand is None:
@@ -253,26 +253,26 @@ def interactive_mode():
 def handle_write_command(user_input):
     """Handle write commands like in the screenshot"""
     console.print(
-        '• I will start by searching the web for "Teil CLI" to understand its main features and purpose.',
+        '• I will start by searching the web for "Flash Tensors CLI" to understand its main features and purpose.',
         style="dim",
     )
 
     # Simulate web search with progress
     with console.status(
-        '[bold green]GoogleSearch[/] Searching the web for: "Teil CLI features and purpose"'
+        '[bold green]GoogleSearch[/] Searching the web for: "Flash Tensors CLI features and purpose"'
     ):
         time.sleep(2)
 
     console.print()
-    console.print("📍 Uncovering Teil's Awesome", style=f"bold {PARAGRAPH}", end="")
+    console.print("📍 Uncovering Flash Tensors' Awesome", style=f"bold {PARAGRAPH}", end="")
     console.print(" (esc to cancel, 21s)", style="dim")
     console.print()
 
     # Show simulated search results
     search_result = """
-Using a Teil.md files
+Using a Flash Tensors.md files
 
-The Teil CLI is a powerful command-line interface that brings AI assistance directly to your terminal. 
+The Flash Tensors CLI is a powerful command-line interface that brings AI assistance directly to your terminal. 
 Key features include:
 
 - Interactive chat mode with context awareness

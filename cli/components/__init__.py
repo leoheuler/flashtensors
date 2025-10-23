@@ -1,5 +1,5 @@
 """
-Components package for the Teil CLI.
+Components package for the Flash Tensors CLI.
 
 This package contains reusable UI components for the command-line interface.
 """

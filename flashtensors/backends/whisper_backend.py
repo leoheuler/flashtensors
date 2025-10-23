@@ -138,7 +138,7 @@ class WhisperBackend(BaseBackend):
             
             if not os.path.exists(os.path.join(full_model_path, "tensor_index.json")):
                 raise ValueError(
-                    f"Model {model_id} is not in TeilEngine fast-loading format. "
+                    f"Model {model_id} is not in FlashEngine fast-loading format. "
                     f"Please re-register with flash.register_model('{model_id}', backend='transformers', force=True)"
                 )
             

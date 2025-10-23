@@ -1,5 +1,5 @@
 """
-Entry point for running TeilEngine modules.
+Entry point for running FlashEngine modules.
 """
 import sys
 

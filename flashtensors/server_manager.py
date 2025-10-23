@@ -43,7 +43,7 @@ class ServerManager:
                 logger.info("Server startup already initiated")
                 return True
 
-            logger.info(f"Starting TeilEngine gRPC server via supervisord on {host}:{port}...")
+            logger.info(f"Starting FlashEngine gRPC server via supervisord on {host}:{port}...")
             
             if not self._start_supervisord():
                 return False
@@ -65,8 +65,8 @@ class ServerManager:
 
     def _start_supervisord(self) -> bool:
         logger.info("Environment variables before starting supervisord:")
-        for key in ["TEILENGINE_HOST", "TEILENGINE_PORT", "TEILENGINE_STORAGE_PATH", 
-                    "TEILENGINE_NUM_THREADS", "TEILENGINE_CHUNK_SIZE", "TEILENGINE_MEM_POOL_SIZE"]:
+        for key in ["FLASHENGINE_HOST", "FLASHENGINE_PORT", "FLASHENGINE_STORAGE_PATH", 
+                    "FLASHENGINE_NUM_THREADS", "FLASHENGINE_CHUNK_SIZE", "FLASHENGINE_MEM_POOL_SIZE"]:
             logger.info(f"  {key}={os.environ.get(key, 'NOT SET')}")
 
         try:
@@ -102,7 +102,7 @@ class ServerManager:
     
     def _start_storage_server(self) -> bool:
         try:
-            logger.info("Starting TeilEngine storage server via supervisorctl...")
+            logger.info("Starting FlashEngine storage server via supervisorctl...")
             cmd = ["supervisorctl", "-c", self.config_file, "start", "flashtensors_storage_server"]
             
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -137,7 +137,7 @@ class ServerManager:
     def stop_server(self):
         with self._lock:
             try:
-                logger.info("Stopping TeilEngine storage server...")
+                logger.info("Stopping FlashEngine storage server...")
                 
                 # Stop the storage server via supervisorctl
                 cmd = ["supervisorctl", "-c", self.config_file, "stop", "flashtensors_storage_server"]
@@ -161,9 +161,9 @@ class ServerManager:
                         self.supervisord_process.kill()
                     finally:
                         self.supervisord_process = None
-                
-                logger.info("✅ TeilEngine server stack stopped")
-                
+
+                logger.info("✅ FlashEngine server stack stopped")
+
             except Exception as e:
                 logger.error(f"Error stopping server: {e}")
             finally:

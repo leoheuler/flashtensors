@@ -53,12 +53,12 @@ def _save_config_to_file(config: Dict[str, Any]) -> None:
 def _set_environment_variables(config: Dict[str, Any]) -> None:
     """Set environment variables based on config values."""
     env_vars = {
-        "TEILENGINE_HOST": str(config["server_host"]),
-        "TEILENGINE_PORT": str(config["server_port"]),
-        "TEILENGINE_STORAGE_PATH": str(config["storage_path"]),
-        "TEILENGINE_NUM_THREADS": str(config["num_threads"]),
-        "TEILENGINE_CHUNK_SIZE": str(config["chunk_size"]),
-        "TEILENGINE_MEM_POOL_SIZE": str(config["mem_pool_size"]),
+        "FLASHENGINE_HOST": str(config["server_host"]),
+        "FLASHENGINE_PORT": str(config["server_port"]),
+        "FLASHENGINE_STORAGE_PATH": str(config["storage_path"]),
+        "FLASHENGINE_NUM_THREADS": str(config["num_threads"]),
+        "FLASHENGINE_CHUNK_SIZE": str(config["chunk_size"]),
+        "FLASHENGINE_MEM_POOL_SIZE": str(config["mem_pool_size"]),
         "STORAGE_PATH": str(config["storage_path"]),  # Legacy support
     }
     
@@ -76,7 +76,7 @@ def get_config() -> Dict[str, Any]:
     return config
 
 def is_server_running() -> bool:
-    """Check if TeilEngine server is currently running."""
+    """Check if FlashEngine server is currently running."""
     import grpc
     from .proto import storage_pb2, storage_pb2_grpc
     
@@ -152,7 +152,7 @@ def get_server_config() -> Dict[str, Any]:
 def print_config() -> None:
     """Print current configuration for debugging."""
     config = get_config()
-    print("TeilEngine Configuration:")
+    print("FlashEngine Configuration:")
     print("=" * 40)
     for key, value in config.items():
         if key in ["mem_pool_size", "chunk_size"]:

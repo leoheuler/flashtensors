@@ -25,7 +25,7 @@ from flashtensors.utils.logger import init_logger
 
 logger = init_logger(__name__)
 
-class TeilLLMLoader(BaseModelLoader):
+class FlashLLMLoader(BaseModelLoader):
     def __init__(self, load_config: LoadConfig):
         super().__init__(load_config)
         extra_config = (
@@ -77,7 +77,7 @@ class TeilLLMLoader(BaseModelLoader):
         return result
 
     def load_model(self, *, vllm_config: VllmConfig, model_config: ModelConfig) -> nn.Module:
-        logger.info("🚀 Starting TeilLLMLoader.load_model")
+        logger.info("🚀 Starting FlashLLMLoader.load_model")
         from vllm.distributed import get_tensor_model_parallel_rank
 
         assert os.path.isdir(vllm_config.model_config.model)
@@ -103,7 +103,7 @@ class TeilLLMLoader(BaseModelLoader):
             return path
 
         # vLLM needs a local model path to read model config but
-        # TeilLLMLoader Store requires a global model path as the model ID
+        # FlashLLMLoader Store requires a global model path as the model ID
         storage_path = get_storage_path()
         model_path = remove_prefix(local_model_path, storage_path)
 
@@ -166,7 +166,7 @@ class TeilLLMLoader(BaseModelLoader):
         from vllm.distributed import get_tensor_model_parallel_rank
 
         rank = get_tensor_model_parallel_rank()
-        state_dict = TeilLLMLoader._filter_subtensors(model.state_dict())
+        state_dict = FlashLLMLoader._filter_subtensors(model.state_dict())
 
         # move all tensors to CPU
         for key, tensor in state_dict.items():
@@ -183,7 +183,7 @@ class TeilLLMLoader(BaseModelLoader):
 
 def patch_model_loader(load_config: LoadConfig):
     if load_config.load_format == "flash":
-        return TeilLLMLoader(load_config=load_config)
+        return FlashLLMLoader(load_config=load_config)
 
     return get_model_loader(load_config)
     
@@ -196,7 +196,7 @@ def save_llm_state(
     pattern: Optional[str] = None,
     max_size: Optional[int] = None,
 ) -> None:
-    """Save the model state in TeilLLMLoader format."""
+    """Save the model state in FlashLLMLoader format."""
     raise NotImplementedError("Save LLM state not implemented.")
 
 
@@ -233,8 +233,8 @@ def save_llm_state_runner(
     pattern: Optional[str] = None,
     max_size: Optional[int] = None,
 ) -> None:
-    """Save the model state in TeilLLMLoader format."""
-    TeilLLMLoader.save_model(
+    """Save the model state in FlashLLMLoader format."""
+    FlashLLMLoader.save_model(
         self.model,
         path,
         pattern=pattern,

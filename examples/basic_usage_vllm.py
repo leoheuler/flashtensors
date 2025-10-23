@@ -18,8 +18,8 @@ except ImportError as e:
 
 
 def main():
-    # Step 1: Configure TeilEngine 
-    print("🔧 Configuring TeilEngine...")
+    # Step 1: Configure FlashEngine
+    print("🔧 Configuring FlashEngine...")
     
     flash.shutdown_server()  # Ensure any existing server is shut down
 
@@ -35,7 +35,7 @@ def main():
 
     flash.activate_vllm_integration()
 
-    print("✅ TeilEngine configured successfully")
+    print("✅ FlashEngine configured successfully")
     
     # Step 2: Transform a model to fast-loading format
     model_id = "Qwen/Qwen3-0.6B"  

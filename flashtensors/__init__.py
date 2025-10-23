@@ -1,5 +1,5 @@
 """
-TeilEngine Library - Ultra-fast AI model loading with CUDA acceleration
+FlashEngine Library - Ultra-fast AI model loading with CUDA acceleration
 """
 
 __version__ = "0.1.0"
@@ -65,7 +65,7 @@ from .utils.device_map_utils import (
 )
 
 from .integrations.vllm import (
-    TeilLLMLoader,
+    FlashLLMLoader,
     activate as activate_vllm_integration,
     save_llm_state,
     patch_model_loader,
@@ -129,7 +129,7 @@ __all__ = [
     "enable_minimal_logs",
     "enable_quiet_mode",
     # VLLM integration
-    "TeilLLMLoader",
+    "FlashLLMLoader",
     "activate_vllm_integration",
     "save_llm_state",
     "patch_model_loader",
@@ -145,7 +145,7 @@ __all__ = [
 
 
 def info():
-    print(f"TeilEngine library v{__version__}")
+    print(f"FlashEngine library v{__version__}")
     print(f"C++ extensions available: {_extensions_available}")
     if not _extensions_available:
         print(f"Import error: {_import_error}")

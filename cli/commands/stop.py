@@ -12,6 +12,7 @@ from rich.console import Console
 
 from cli.commands.base import BaseCommand, InteractiveCommandMixin
 from cli.styles.colors import ERROR, SUCCESSFULL_UPDATE
+import flashtensors as flash
 
 
 class StopCommand(BaseCommand, InteractiveCommandMixin):
@@ -41,14 +42,8 @@ class StopCommand(BaseCommand, InteractiveCommandMixin):
         try:
             # Find the process ID of the running Flash engine
             try:
-                result = subprocess.run(
-                    ["pkill", "-9", "-f", "flashtensors.storage_server"],
-                    capture_output=True,
-                    text=True,
-                    check=True,
-                )
-                pids = result.stdout.strip().split("\n")
-            except subprocess.CalledProcessError:
+                flash.shutdown_server()
+            except Exception as e:
                 self.console.print("No running Flash engine process found.", style=ERROR)
                 return False
 

@@ -1,5 +1,5 @@
 """
-Pull command for downloading models in the Teil CLI.
+Pull command for downloading models in the Flash Tensors CLI.
 """
 
 import os
@@ -25,11 +25,11 @@ from cli.components.model_status import display_model_status
 
 
 class PullCommand(BaseCommand, InteractiveCommandMixin):
-    """Handle model downloads in the Teil CLI."""
+    """Handle model downloads in the Flash Tensors CLI."""
 
     def __init__(self):
         super().__init__()
-        self.default_model_dir = os.path.expanduser("~/.teil/models")
+        self.default_model_dir = os.path.expanduser("~/.flashtensors/models")
 
     @property
     def command(self):
@@ -62,7 +62,7 @@ class PullCommand(BaseCommand, InteractiveCommandMixin):
 
         # Show example command
         create_simple_command_box(
-            command="teil pull llama2-7b",
+            command="flash pull llama2-7b",
             description="Download a specific model",
             console=self.console,
         )
@@ -70,7 +70,7 @@ class PullCommand(BaseCommand, InteractiveCommandMixin):
     def _download_model(self, model_name: str):
         """Simulate model download with progress"""
         self.console.print(f"\n🔄 Transforming model {model_name}...")
-        result = teil.register_model(
+        result = flash.register_model(
             model_id=model_name,
             backend="transformers",  # We should have an "auto" backend option
             torch_dtype="float16",

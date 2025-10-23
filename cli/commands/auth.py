@@ -1,5 +1,5 @@
 """
-Authentication command for the Teil CLI.
+Authentication command for the FlashTensors CLI.
 """
 
 import click
@@ -11,7 +11,7 @@ from cli.styles.colors import UPDATE, SUCCESSFULL_UPDATE
 
 
 class AuthCommand(BaseCommand, InteractiveCommandMixin):
-    """Handle authentication for the Teil CLI."""
+    """Handle authentication for the FlashTensors CLI."""
 
     def __init__(self):
         super().__init__()
@@ -20,7 +20,7 @@ class AuthCommand(BaseCommand, InteractiveCommandMixin):
     def command(self):
         """Return the Click command instance."""
 
-        @click.command(help="Authenticate with Teil")
+        @click.command(help="Authenticate with Flash Tensors")
         def cmd():
             self.execute()
 
@@ -34,13 +34,13 @@ class AuthCommand(BaseCommand, InteractiveCommandMixin):
         self.console.print(
             "✅ Authentication successful!", style=f"italic {SUCCESSFULL_UPDATE}"
         )
-        self.console.print("You are now logged in to Teil.", style="dim")
+        self.console.print("You are now logged in to Flash Tensors.", style="dim")
 
     @classmethod
     def get_interactive_commands(cls):
         """Return interactive command help text."""
         return {
-            "auth": "Authenticate with Teil",
+            "auth": "Authenticate with Flash Tensors CLI",
         }
 
     @classmethod

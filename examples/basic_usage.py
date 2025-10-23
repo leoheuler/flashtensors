@@ -18,9 +18,9 @@ except ImportError as e:
 
 
 def main():
-    # Step 1: Configure TeilEngine 
-    print("🔧 Configuring TeilEngine...")
-    
+    # Step 1: Configure FlashEngine
+    print("🔧 Configuring FlashEngine...")
+
     flash.configure(
         storage_path="/tmp/models",   # Where models will be stored
         mem_pool_size=1024**3*30,               # 170GB memory pool (GPU Size)
@@ -31,8 +31,8 @@ def main():
         server_port=8073                        # gRPC server port
     )
 
-    print("✅ TeilEngine configured successfully")
-    
+    print("✅ FlashEngine configured successfully")
+
     # Step 2: Transform a model to fast-loading format
     model_id = "Qwen/Qwen3-0.6B"  
     
