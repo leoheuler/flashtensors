@@ -40,13 +40,30 @@ Use cases:
 ## 🔧 Installation  
 
 ```bash
-pip install flashtensors
+pip install git+https://github.com/leoheuler/flashtensors.git
 ```
 
 ---
 
-## 🔧 Getting Started  
+# Getting Started 
 
+## Using the command line
+``` bash
+# Start the daemon server
+flashtensors start
+```
+
+``` bash
+# Pull the model of your preference
+flashtensors pull Qwen/Qwen3-0.6B
+```
+
+``` bash
+# Run the model
+flashtensors run Qwen/Qwen3-0.6B "Hello world"
+```
+
+## Using the SDK
 ### vllm
 ``` Python
 import flashtensors as ft
@@ -182,14 +199,3 @@ Coldstarts stay consistently under **5 seconds**, even for **32B parameter model
 <br>
 <br>
 <br>
-
-Inspired on Serverless LLM
-```
-@inproceedings{fu2024serverlessllm,
-  title={ServerlessLLM: Low-Latency Serverless Inference for Large Language Models},
-  author={Fu, Yao and Xue, Leyang and Huang, Yeqi and Brabete, Andrei-Octavian and Ustiugov, Dmitrii and Patel, Yuvraj and Mai, Luo},
-  booktitle={18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
-  pages={135--153},
-  year={2024}
-}
-```
