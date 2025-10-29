@@ -8,8 +8,10 @@
 
 ```
 
-> A blazing-fast inference engine that loads models **up to 10x faster** than alternative loaders.  
-> Load large models in **< 2 seconds**.  
+# Run 100 Large Models on a single GPU with minimal impact to Time to First Token.
+
+> A blazing-fast inference engine that loads models from SSD to GPU VRAM **up to 10x faster** than alternative loaders.  
+> Hotswap large models in **< 2 seconds**.  
 
 ---
 
