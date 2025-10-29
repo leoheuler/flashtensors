@@ -202,4 +202,4 @@ Coldstarts stay consistently under **5 seconds**, even for **32B parameter model
 
 
 Credits: 
-- [ServerlessLLM] (https://github.com/leoheuler/flashtensors/CREDITS.md)
+- Inspired and adapted from the great work of [ServerlessLLM](https://github.com/leoheuler/flashtensors/CREDITS.md)
