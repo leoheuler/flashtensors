@@ -52,17 +52,17 @@ pip install git+https://github.com/leoheuler/flashtensors.git
 ## Using the command line
 ``` bash
 # Start the daemon server
-flashtensors start
+flash start
 ```
 
 ``` bash
 # Pull the model of your preference
-flashtensors pull Qwen/Qwen3-0.6B
+flash pull Qwen/Qwen3-0.6B
 ```
 
 ``` bash
 # Run the model
-flashtensors run Qwen/Qwen3-0.6B "Hello world"
+flash run Qwen/Qwen3-0.6B "Hello world"
 ```
 
 ## Using the SDK
