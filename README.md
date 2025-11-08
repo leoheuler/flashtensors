@@ -1,5 +1,16 @@
+
+
 <div align="center">
-    <img src="https://i.imgur.com/RB9GU4S.png"/>
+        <div style="background: #0d1117; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; margin: 0; font-family: 'Courier New', Consolas, monospace;">
+        <div style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 30px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); overflow-x: auto;">
+            <pre style="font-family: 'Courier New', Consolas, monospace; font-size: 14px; line-height: 1.2; color: #58a6ff; margin: 0; white-space: pre;">████████╗██╗      █████╗ ███████╗██╗  ██╗████████╗███████╗███╗   ██╗███████╗ ██████╗ ██████╗ ███████╗
+██╔═════╝██║     ██╔══██╗██╔════╝██║  ██║╚══██╔══╝██╔════╝████╗  ██║██╔════╝██╔═══██╗██╔══██╗██╔════╝
+█████╗   ██║     ███████║███████╗███████║   ██║   █████╗  ██╔██╗ ██║███████╗██║   ██║██████╔╝███████╗
+██╔══╝   ██║     ██╔══██║╚════██║██╔══██║   ██║   ██╔══╝  ██║╚██╗██║╚════██║██║   ██║██╔══██╗╚════██║
+██║      ███████╗██║  ██║███████║██║  ██║   ██║   ███████╗██║ ╚████║███████║╚██████╔╝██║  ██║███████║
+╚═╝      ╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝</pre>
+        </div>
+    </div>
     <br>
     <a href="https://discord.gg/5usuKkmT"><img alt="Discord" src="https://img.shields.io/discord/1436829434815578114?logo=discord&link=https%3A%2F%2Fdiscord.gg%2F5usuKkmT"></a>
 </div>
