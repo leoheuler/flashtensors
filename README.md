@@ -3,12 +3,15 @@
 <div align="center">
         <img src="https://i.imgur.com/wg5VTWn.png"> 
     <br>
+        <br>
          <a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/Python-3.11%E2%80%933.12-blue"></a>
     <a href="https://discord.gg/5usuKkmT"><img alt="Discord" src="https://img.shields.io/discord/1436829434815578114?logo=discord&label=join&link=https%3A%2F%2Fdiscord.gg%2F5usuKkmT"></a>
         <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"></a>
+<br>
+<h2> Run 100 Large Models on a single GPU with minimal impact to Time to First Token. </h2>
+        <br>
+<img src="https://i.imgur.com/r0hbTJ6.png">
 </div>
-
-# Run 100 Large Models on a single GPU with minimal impact to Time to First Token.
 
 > A blazing-fast inference engine that loads models from SSD to GPU VRAM **up to 10x faster** than alternative loaders.  
 > Hotswap large models in **< 2 seconds**.  
