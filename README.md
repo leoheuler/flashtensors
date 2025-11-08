@@ -199,6 +199,14 @@ flashtensors drastically reduces coldstart times compared to alternative loaders
 ⚡ **Average speedup: ~4–6× faster model loads**  
 Coldstarts stay consistently under **5 seconds**, even for **32B parameter models**.  
 
+## Roadmap:
+- Run benchmarks on a diversity of hardware
+- Docker Integration
+- Inference Server
+- SGLang Integration
+- LlamaCPP Integration
+- Dynamo Integration
+- Ollama Integration
 
 <br>
 <br>
