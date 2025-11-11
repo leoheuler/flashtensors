@@ -16,7 +16,7 @@
 > A blazing-fast inference engine that loads models from SSD to GPU VRAM **up to 10x faster** than alternative loaders.  
 > Hotswap large models in **< 2 seconds**.
 >
->  <b>Credits to <a href="https://github.com/ServerlessLLM/ServerlessLLM"> ServerlessLLM </a> for their storage library that enables fast loading. <b>
+>  <b>Credits to <a href="https://github.com/ServerlessLLM/ServerlessLLM"> ServerlessLLM </a> for their storage library that enables fast loading. </b>
 
 ---
 
@@ -209,12 +209,6 @@ Coldstarts stay consistently under **5 seconds**, even for **32B parameter model
 - LlamaCPP Integration
 - Dynamo Integration
 - Ollama Integration
-
-<br>
-<br>
-<br>
-<br>
-
 
 Credits: 
 - Inspired and adapted from the great work of [ServerlessLLM](https://github.com/leoheuler/flashtensors/CREDITS.md)
