@@ -14,7 +14,9 @@
 </div>
 
 > A blazing-fast inference engine that loads models from SSD to GPU VRAM **up to 10x faster** than alternative loaders.  
-> Hotswap large models in **< 2 seconds**.  
+> Hotswap large models in **< 2 seconds**.
+>
+>  <b>Credits to <a href="https://github.com/ServerlessLLM/ServerlessLLM"> ServerlessLLM </a> for their storage library that enables fast loading. <b>
 
 ---
 
