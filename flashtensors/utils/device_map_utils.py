@@ -1,14 +1,33 @@
+# Adapted from https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/sllm_store/device_map_utils.py
+# ---------------------------------------------------------------------------- #
+#  ServerlessLLM                                                               #
+#  Copyright (c) ServerlessLLM Team 2024                                       #
+#                                                                              #
+#  Licensed under the Apache License, Version 2.0 (the "License");             #
+#  you may not use this file except in compliance with the License.            #
+#                                                                              #
+#  You may obtain a copy of the License at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/LICENSE-2.0                  #
+#                                                                              #
+#  Unless required by applicable law or agreed to in writing, software         #
+#  distributed under the License is distributed on an "AS IS" BASIS,           #
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    #
+#  See the License for the specific language governing permissions and         #
+#  limitations under the License.                                              #
+# ---------------------------------------------------------------------------- #
+
 from typing import Dict, List, Union, Optional, Tuple
 import torch
 from accelerate.utils import get_balanced_memory, get_max_memory
 from accelerate import infer_auto_device_map
 
 from .logger import init_logger
+
 logger = init_logger(__name__)
 
-DeviceMapType = Union[
-    str, Dict[str, Union[int, str, torch.device]], int, torch.device
-]
+DeviceMapType = Union[str, Dict[str, Union[int, str, torch.device]], int, torch.device]
+
 
 def _transform_device_map_to_dict(
     device_map: DeviceMapType,
@@ -38,6 +57,7 @@ def _transform_device_map_to_dict(
             device_map = {"": device_map}
     return device_map
 
+
 def _expand_tensor_name(
     device_map: DeviceMapType, tensor_names: List[str]
 ) -> Dict[str, Union[int, torch.device]]:
@@ -57,6 +77,7 @@ def _expand_tensor_name(
                 expanded_device_map[name] = device_id
 
     return expanded_device_map
+
 
 def _compute_device_placement_from_map(
     model: torch.nn.Module,
@@ -103,6 +124,7 @@ def _compute_device_placement_from_map(
 
     return device_map
 
+
 def _compute_device_placement_from_map_fast(
     no_split_modules: Dict[str, int],
     tied_modules: List[Tuple[List[str], int]],
@@ -141,9 +163,7 @@ def _compute_device_placement_from_map_fast(
                     no_split_modules[module] = tied_size
                     break
 
-        while next(iter(no_split_modules.values())) > next(
-            iter(max_memory.values())
-        ):
+        while next(iter(no_split_modules.values())) > next(iter(max_memory.values())):
             device_id, memory = max_memory.popitem()
             logger.warning(
                 f"Device {device_id} has insufficient memory {memory} for the first module."  # noqa: E501
@@ -169,9 +189,7 @@ def _compute_device_placement_from_map_fast(
             placement = _get_sequential_placement(no_split_modules, max_memory)
 
         if placement is None:
-            raise RuntimeError(
-                "Failed to find a valid placement for the model."
-            )
+            raise RuntimeError("Failed to find a valid placement for the model.")
 
         # reassign tied modules to the same device
         for tied_groups, shared_size in tied_modules:  # noqa: B007
@@ -242,9 +260,7 @@ def _get_balanced_placement(
                         dp[i][k][1] = min(dp[j][k - 1][1], current_size)
                         dp[i][k][2] = max(dp[j][k - 1][2], current_size)
                         dp[i][k][-1] = dp[j][k - 1][-1][:]  # Copy partitions
-                        dp[i][k][-1][k - 1] = (
-                            current_partition  # Update last partition
-                        )
+                        dp[i][k][-1][k - 1] = current_partition  # Update last partition
 
     # Result
     result = dp[length][n][-1]

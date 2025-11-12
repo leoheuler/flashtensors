@@ -1,8 +1,28 @@
+# Modified from: https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/sllm_store/server.py
+# ---------------------------------------------------------------------------- #
+#  ServerlessLLM                                                               #
+#  Copyright (c) ServerlessLLM Team 2024                                       #
+#                                                                              #
+#  Licensed under the Apache License, Version 2.0 (the "License");             #
+#  you may not use this file except in compliance with the License.            #
+#                                                                              #
+#  You may obtain a copy of the License at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/LICENSE-2.0                  #
+#                                                                              #
+#  Unless required by applicable law or agreed to in writing, software         #
+#  distributed under the License is distributed on an "AS IS" BASIS,           #
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    #
+#  See the License for the specific language governing permissions and         #
+#  limitations under the License.                                              #
+# ---------------------------------------------------------------------------- #
+
 import asyncio
 import grpc
 from .proto import storage_pb2_grpc, storage_pb2
 from .utils import init_logger
-from ._checkpoint_store import (CheckpointStore, MemCopyChunk)
+from ._checkpoint_store import CheckpointStore, MemCopyChunk
+
 
 class StorageServicer(storage_pb2_grpc.StorageServicer):
 
@@ -72,9 +92,7 @@ class StorageServicer(storage_pb2_grpc.StorageServicer):
                 return storage_pb2.LoadModelResponse()
 
             gpu_memory_handles = {
-                device_uuid: [
-                    handle.cuda_ipc_handle for handle in handle_list.handles
-                ]
+                device_uuid: [handle.cuda_ipc_handle for handle in handle_list.handles]
                 for device_uuid, handle_list in request.handles.items()
             }
 
@@ -109,9 +127,7 @@ class StorageServicer(storage_pb2_grpc.StorageServicer):
             context.set_code(grpc.StatusCode.INTERNAL)
             return storage_pb2.LoadModelResponse()
 
-        self.logger.info(
-            f"LoadModel: success {model_path} with target {device_type}"
-        )
+        self.logger.info(f"LoadModel: success {model_path} with target {device_type}")
         return storage_pb2.LoadModelResponse(model_path=model_path)
 
     async def ConfirmModel(self, request, context):
@@ -138,11 +154,15 @@ class StorageServicer(storage_pb2_grpc.StorageServicer):
                     )
                     return storage_pb2.ConfirmModelResponse(model_path=model_path)
                 elif ret == 1:
-                    self.logger.warning(f"Model {model_path} replica {replica_uuid} is interrupted")
+                    self.logger.warning(
+                        f"Model {model_path} replica {replica_uuid} is interrupted"
+                    )
                     context.set_code(grpc.StatusCode.INTERNAL)
                     return storage_pb2.ConfirmModelResponse()
                 else:
-                    self.logger.warning(f"Confirm model failed with ret={ret}, retry {i + 1}")
+                    self.logger.warning(
+                        f"Confirm model failed with ret={ret}, retry {i + 1}"
+                    )
             except Exception as e:
                 self.logger.error(f"Exception in wait_model_in_gpu: {e}")
                 if i == 19:  # Last retry
@@ -150,9 +170,7 @@ class StorageServicer(storage_pb2_grpc.StorageServicer):
 
             await asyncio.sleep(0.1)  # Longer sleep for stability
 
-        self.logger.error(
-            f"Confirm model {model_path} replica {replica_uuid} failed"
-        )
+        self.logger.error(f"Confirm model {model_path} replica {replica_uuid} failed")
         context.set_code(grpc.StatusCode.INTERNAL)
         return storage_pb2.ConfirmModelResponse()
 
