@@ -74,6 +74,7 @@ flash run Qwen/Qwen3-0.6B "Hello world"
 ### vllm
 ``` Python
 import flashtensors as ft
+from vllm import SamplingParams
 import time
 
 ft.shutdown_server()  # Ensure any existing server is shut down
