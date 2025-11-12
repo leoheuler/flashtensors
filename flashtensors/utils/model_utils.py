@@ -1,3 +1,23 @@
+# Adapted from: https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/sllm_store/utils.py
+
+# ---------------------------------------------------------------------------- #
+#  ServerlessLLM                                                               #
+#  Copyright (c) ServerlessLLM Team 2024                                       #
+#                                                                              #
+#  Licensed under the Apache License, Version 2.0 (the "License");             #
+#  you may not use this file except in compliance with the License.            #
+#                                                                              #
+#  You may obtain a copy of the License at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/LICENSE-2.0                  #
+#                                                                              #
+#  Unless required by applicable law or agreed to in writing, software         #
+#  distributed under the License is distributed on an "AS IS" BASIS,           #
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    #
+#  See the License for the specific language governing permissions and         #
+#  limitations under the License.                                              #
+# ---------------------------------------------------------------------------- #
+
 from functools import reduce
 from typing import Dict, Tuple, List, Any
 
@@ -6,20 +26,22 @@ from torch import nn
 from accelerate.utils import find_tied_parameters
 
 
-def calculate_device_memory(device_map: Dict[str, Any], tensor_index: Dict[str, Tuple[int, int]]) -> Dict[Any, int]:
+def calculate_device_memory(
+    device_map: Dict[str, Any], tensor_index: Dict[str, Tuple[int, int]]
+) -> Dict[Any, int]:
     """
     Calculate total memory required for each device based on device mapping.
-    
+
     Args:
         device_map: Mapping of tensor names to devices
         tensor_index: Index of tensor offsets and sizes
-        
+
     Returns:
         Dictionary mapping devices to required memory in bytes
     """
     device_memory = {}
     tensor_record = {}
-    
+
     for tensor_name, device in device_map.items():
         if tensor_name in tensor_index:
             if device not in device_memory:
@@ -36,16 +58,15 @@ def calculate_device_memory(device_map: Dict[str, Any], tensor_index: Dict[str, 
 
 
 def calculate_tensor_device_offsets(
-    device_map: Dict[str, Any], 
-    tensor_index: Dict[str, Tuple[int, int]]
+    device_map: Dict[str, Any], tensor_index: Dict[str, Tuple[int, int]]
 ) -> Tuple[Dict[Any, Dict[str, int]], Dict[Any, List[Tuple[int, int, int, int]]]]:
     """
     Calculate tensor device offsets and copy chunks for memory allocation.
-    
+
     Args:
         device_map: Mapping of tensor names to devices
         tensor_index: Index of tensor offsets and sizes
-        
+
     Returns:
         Tuple of (tensor_device_offsets, tensor_copy_chunks)
     """
@@ -53,7 +74,7 @@ def calculate_tensor_device_offsets(
     tensor_copy_chunks = {}
     device_offset = {}
     tensor_record = {}
-    
+
     for tensor_name, device in device_map.items():
         if device not in tensor_device_offsets:
             tensor_device_offsets[device] = {}
@@ -67,9 +88,7 @@ def calculate_tensor_device_offsets(
                 ]
             else:
                 tensor_record[(offset, size)] = device_offset[device]
-                tensor_device_offsets[device][tensor_name] = device_offset[
-                    device
-                ]
+                tensor_device_offsets[device][tensor_name] = device_offset[device]
                 tensor_copy_chunks[device].append(
                     (offset, size, device_offset[device], 0)
                 )
@@ -88,10 +107,10 @@ def dtype_byte_size(dtype: torch.dtype) -> int:
 def get_total_parameter_size(module: nn.Module) -> int:
     """
     Calculate the total parameter size of a module in bytes.
-    
+
     Args:
         module: PyTorch module
-        
+
     Returns:
         Total parameter size in bytes
     """
@@ -102,18 +121,16 @@ def get_total_parameter_size(module: nn.Module) -> int:
 
 
 def get_no_split_modules(
-    model: nn.Module, 
-    no_split_modules_list: List[str], 
-    parent_name: str = ""
+    model: nn.Module, no_split_modules_list: List[str], parent_name: str = ""
 ) -> Dict[str, int]:
     """
     Get modules that should not be split across devices.
-    
+
     Args:
         model: PyTorch model
         no_split_modules_list: List of module class names that shouldn't be split
         parent_name: Parent module name for recursive calls
-        
+
     Returns:
         Dictionary mapping module names to their parameter sizes
     """
@@ -122,10 +139,7 @@ def get_no_split_modules(
         full_name = f"{parent_name}.{name}" if parent_name else name
         module_class_name = submodule.__class__.__name__
         # If the module is a leaf module or in the no_split_modules_list, we don't split it
-        if (
-            not list(submodule.children())
-            or module_class_name in no_split_modules_list
-        ):
+        if not list(submodule.children()) or module_class_name in no_split_modules_list:
             no_split_modules[full_name] = get_total_parameter_size(submodule)
             continue
         no_split_modules.update(
@@ -138,11 +152,11 @@ def get_no_split_modules(
 def get_parameter_size(model: nn.Module, param_path: str) -> int:
     """
     Get the size of a specific parameter in a model.
-    
+
     Args:
         model: PyTorch model
         param_path: Dot-separated path to the parameter
-        
+
     Returns:
         Parameter size in bytes
     """
@@ -157,16 +171,15 @@ def get_parameter_size(model: nn.Module, param_path: str) -> int:
 
 
 def get_tied_no_split_modules(
-    model: nn.Module, 
-    no_split_modules: Dict[str, int]
+    model: nn.Module, no_split_modules: Dict[str, int]
 ) -> List[Tuple[List[str], int]]:
     """
     Get modules with tied parameters that should not be split.
-    
+
     Args:
         model: PyTorch model
         no_split_modules: Dictionary of modules that shouldn't be split
-        
+
     Returns:
         List of tuples containing (tied_module_group, shared_size)
     """
@@ -206,7 +219,7 @@ def set_module_buffer_to_device(
 ):
     """
     Set a specific module buffer to a target device.
-    
+
     Args:
         module: PyTorch module
         target: Dot-separated path to the buffer
@@ -231,7 +244,7 @@ def send_module_buffers_to_device(
 ):
     """
     Send module buffers to their assigned devices based on device map.
-    
+
     Args:
         module: PyTorch module
         device_map: Mapping of modules/tensors to devices
@@ -256,14 +269,12 @@ __all__ = [
     # Memory and device calculations
     "calculate_device_memory",
     "calculate_tensor_device_offsets",
-    
     # Module and parameter analysis
     "dtype_byte_size",
     "get_total_parameter_size",
     "get_no_split_modules",
     "get_parameter_size",
     "get_tied_no_split_modules",
-    
     # Buffer and device management
     "set_module_buffer_to_device",
     "send_module_buffers_to_device",
