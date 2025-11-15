@@ -1,3 +1,4 @@
+# Derived from https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/CMakeLists.txt
 cmake_minimum_required(VERSION 3.20)
 
 # Set the project name

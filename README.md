@@ -26,7 +26,7 @@ used under the Apache License, Version 2.0. </b>
 
 ## 🚀 Why flashtensors?  
 
-Traditional model loaders slow down your workflow with painful startup times. flashtensors was built from the ground up to eliminate bottlenecks and maximize performance.  
+Traditional model loaders slow down your workflow with painful startup times. flashtensors is built on top of ServerlessLLM storage library to eliminate bottlenecks and maximize performance.  
 
 - ⚡ **Up to 10x faster** than standard loaders  
 - ⏱ **Coldstarts < 2 seconds**
@@ -44,6 +44,7 @@ Use cases:
 - Local Inference
 ---
 
+Our Goal is to make it dead simple to run large models on any device without having to wait minutes for startup times. Flashtensors offers a simple SDK that wraps on top of SOTA inference engines like VLLM (more engines coming soon), and allows you to switch models with ease. It contains an interactive CLI that allows you to run models in the terminal. We are working in a pytorch compatible API to make it very simple to adapt custom models to fast loading.
 
 
 ## 🔧 Installation  
@@ -192,7 +193,7 @@ new_state_dict = flash.load_dict("/your/model/folder", device_map)
 
 flashtensors drastically reduces coldstart times compared to alternative loaders like safetensors.  
 
-| Model            | flashtensors ⚡ (s) | safetensors (mmap) (s) | Speedup |
+| Model            | flashtensors (sllm) ⚡ (s) | safetensors (mmap) (s) | Speedup |
 |------------------|------------|----------|---------|
 | Qwen/Qwen3-0.6B  | **2.74**   | 11.68    | ~4.3×   |
 | Qwen/Qwen3-4B    | **2.26**   | 8.54     | ~3.8×   |
@@ -214,4 +215,4 @@ Coldstarts stay consistently under **5 seconds**, even for **32B parameter model
 - Ollama Integration
 
 Credits: 
-- Inspired and adapted from the great work of [ServerlessLLM](https://github.com/leoheuler/flashtensors/CREDITS.md)
+- Inspired and adapted from the great work of [ServerlessLLM](https://github.com/leoheuler/flashtensors/blob/main/CREDITS.md)

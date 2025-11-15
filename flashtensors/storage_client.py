@@ -1,3 +1,22 @@
+# Derived from: https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/sllm_store/client.py
+# ---------------------------------------------------------------------------- #
+#  ServerlessLLM                                                               #
+#  Copyright (c) ServerlessLLM Team 2024                                       #
+#                                                                              #
+#  Licensed under the Apache License, Version 2.0 (the "License");             #
+#  you may not use this file except in compliance with the License.            #
+#                                                                              #
+#  You may obtain a copy of the License at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/LICENSE-2.0                  #
+#                                                                              #
+#  Unless required by applicable law or agreed to in writing, software         #
+#  distributed under the License is distributed on an "AS IS" BASIS,           #
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.    #
+#  See the License for the specific language governing permissions and         #
+#  limitations under the License.                                              #
+# ---------------------------------------------------------------------------- #
+
 import grpc
 import time
 from .utils import init_logger
@@ -6,11 +25,13 @@ from .config import get_server_address
 
 logger = init_logger(__name__)
 
+
 class StorageResponse:
     def __init__(self, success: bool, error: str = None, data=None):
         self.success = success
         self.error = error
         self.data = data
+
 
 class StorageClient:
     def __init__(self, server_address=None):
@@ -134,7 +155,9 @@ class StorageClient:
         try:
             response = self.stub.RegisterModel(request)
             logger.info("Model registered")
-            return StorageResponse(success=True, data={"model_size": response.model_size})
+            return StorageResponse(
+                success=True, data={"model_size": response.model_size}
+            )
         except grpc.RpcError as e:
             logger.error(f"Error: {e}")
             return StorageResponse(success=False, error=str(e))
@@ -142,11 +165,13 @@ class StorageClient:
     def get_server_config(self, max_retries=15, retry_delay=2.0):
         """Get server config with retry logic to handle startup race conditions."""
         request = storage_pb2.GetServerConfigRequest()
-        
+
         for attempt in range(max_retries):
             try:
                 response = self.stub.GetServerConfig(request)
-                logger.info(f"Successfully connected to storage server on attempt {attempt + 1}")
+                logger.info(
+                    f"Successfully connected to storage server on attempt {attempt + 1}"
+                )
                 return {
                     "chunk_size": response.chunk_size,
                     "mem_pool_size": response.mem_pool_size,
@@ -159,11 +184,13 @@ class StorageClient:
                     )
                     time.sleep(retry_delay)
                 else:
-                    logger.error(f"Failed to connect to storage server after {max_retries} attempts: {e}")
+                    logger.error(
+                        f"Failed to connect to storage server after {max_retries} attempts: {e}"
+                    )
                     return None
-        
+
         return None
-    
+
     def clear_gpu_memory(self) -> StorageResponse:
         """Clear all GPU memory managed by the storage service."""
         logger.info("🧹 Clearing GPU memory via storage service...")

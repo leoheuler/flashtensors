@@ -1,4 +1,6 @@
 Inspired and adapted from Serverless LLM
+
+If you want to use this for your research please cite: 
 ```
 @inproceedings{fu2024serverlessllm,
   title={ServerlessLLM: Low-Latency Serverless Inference for Large Language Models},
@@ -8,3 +10,4 @@ Inspired and adapted from Serverless LLM
   year={2024}
 }
 ```
+https://github.com/ServerlessLLM/ServerlessLLM

@@ -1,3 +1,23 @@
+# Adapted from https://github.com/ServerlessLLM/ServerlessLLM/blob/main/setup.py
+
+# ---------------------------------------------------------------------------- #
+#  serverlessllm                                                               #
+#  copyright (c) serverlessllm team 2024                                       #
+#                                                                              #
+#  licensed under the apache license, version 2.0 (the "license");             #
+#  you may not use this file except in compliance with the license.            #
+#                                                                              #
+#  you may obtain a copy of the license at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/license-2.0                  #
+#                                                                              #
+#  unless required by applicable law or agreed to in writing, software         #
+#  distributed under the license is distributed on an "as is" basis,           #
+#  without warranties or conditions of any kind, either express or implied.    #
+#  see the license for the specific language governing permissions and         #
+#  limitations under the license.                                              #
+# ---------------------------------------------------------------------------- #
+
 import io
 import os
 import subprocess
@@ -24,6 +44,7 @@ except Exception:
 
 ROOT_DIR = os.path.dirname(__file__)
 
+
 def check_nvcc_installed(cuda_home: str) -> None:
     """Check if nvcc (NVIDIA CUDA compiler) is installed."""
     try:
@@ -36,14 +57,13 @@ def check_nvcc_installed(cuda_home: str) -> None:
             "Please ensure that the CUDA toolkit is installed and nvcc is available in your PATH."
         ) from None
 
+
 def check_hipcc_installed(rocm_home: str) -> None:
     """Check if hipcc (AMD HIP compiler) is installed."""
     hipcc_paths = [rocm_home + "/bin/hipcc", rocm_home + "/hip/bin/hipcc"]
     for hipcc in hipcc_paths:
         try:
-            _ = subprocess.check_output(
-                [hipcc, "--version"], universal_newlines=True
-            )
+            _ = subprocess.check_output([hipcc, "--version"], universal_newlines=True)
             return
         except Exception:
             continue
@@ -51,6 +71,7 @@ def check_hipcc_installed(rocm_home: str) -> None:
         "hipcc is not installed or not found in your PATH. "
         "Please ensure that the HIP toolkit is installed and hipcc is available in your PATH."
     ) from None
+
 
 if torch_available:
     if CUDA_HOME is not None:
@@ -62,12 +83,16 @@ if torch_available:
             "CUDA_HOME or ROCM_HOME environment variable must be set to compile CUDA or HIP extensions."
         )
 
+
 def is_ninja_available() -> bool:
     try:
-        subprocess.run(["ninja", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(
+            ["ninja", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         return True
     except FileNotFoundError:
         return False
+
 
 class CustomInstall(install):
     """Custom installation to ensure extensions are built before installation."""
@@ -76,23 +101,27 @@ class CustomInstall(install):
         self.run_command("build_ext")
         super().run()
 
+
 def fetch_requirements(path):
     """Load requirements from file."""
     try:
         with open(path, "r") as fd:
-            return [r.strip() for r in fd.readlines() if r.strip() and not r.startswith('#')]
+            return [
+                r.strip() for r in fd.readlines() if r.strip() and not r.startswith("#")
+            ]
     except FileNotFoundError:
-        raise RuntimeError(
-            "requirements.txt file not found"
-        )
+        raise RuntimeError("requirements.txt file not found")
+
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
         return text[len(prefix) :]
     return text
 
+
 def get_path(*filepath) -> str:
     return os.path.join(ROOT_DIR, *filepath)
+
 
 def read_readme() -> str:
     """Read the README file if present."""
@@ -102,10 +131,12 @@ def read_readme() -> str:
     else:
         return ""
 
+
 class CMakeExtension(Extension):
     def __init__(self, name: str, cmake_lists_dir: str = ".", **kwa) -> None:
         super().__init__(name, sources=[], **kwa)
         self.cmake_lists_dir = os.path.abspath(cmake_lists_dir)
+
 
 class cmake_build_ext(build_ext):
     did_config: Dict[str, bool] = {}
@@ -121,9 +152,7 @@ class cmake_build_ext(build_ext):
         default_cfg = "Debug" if (self.debug or debug_build) else "Release"
         cfg = os.getenv("CMAKE_BUILD_TYPE", default_cfg)
 
-        outdir = os.path.abspath(
-            os.path.dirname(self.get_ext_fullpath(ext.name))
-        )
+        outdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
 
         cmake_args = [
             "-DCMAKE_BUILD_TYPE={}".format(cfg),
@@ -132,10 +161,10 @@ class cmake_build_ext(build_ext):
             "-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY={}".format(self.build_temp),
             "-DPYTHON_EXECUTABLE={}".format(sys.executable),
             "-DSTORE_PYTHON_EXECUTABLE={}".format(sys.executable),
-            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+            "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
         ]
 
-        verbose = bool(int(os.getenv('VERBOSE', '0')))
+        verbose = bool(int(os.getenv("VERBOSE", "0")))
         if verbose:
             cmake_args += ["-DCMAKE_VERBOSE_MAKEFILE=ON"]
 
@@ -168,9 +197,9 @@ class cmake_build_ext(build_ext):
         for ext in self.extensions:
             self.configure(ext)
 
-            #ext_target_name = remove_prefix(ext.name, "flashtensors.")
+            # ext_target_name = remove_prefix(ext.name, "flashtensors.")
             ext_target_name = ext.name.split(".")[-1]
-            
+
             build_args = [
                 "--build",
                 ".",
@@ -180,6 +209,7 @@ class cmake_build_ext(build_ext):
             ]
 
             subprocess.check_call(["cmake", *build_args], cwd=self.build_temp)
+
 
 # Load requirements
 install_requires = fetch_requirements("requirements.txt")
@@ -222,8 +252,8 @@ setup(
     ],
     keywords="AI, machine learning, model loading, CUDA, GPU acceleration",
     entry_points={
-        'console_scripts': [
-            'flash=cli.flash:cli',
+        "console_scripts": [
+            "flash=cli.flash:cli",
         ],
     },
 )

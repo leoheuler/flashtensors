@@ -1,3 +1,25 @@
+# Derived from https://github.com/ServerlessLLM/ServerlessLLM/blob/main/sllm_store/vllm_patch/patch.sh
+# Original patch is command line triggered. Our current patch is automatically
+# added into the inference engine code. This enables easier compatibility maintainance.
+#
+# ---------------------------------------------------------------------------- #
+#  serverlessllm                                                               #
+#  copyright (c) serverlessllm team 2024                                       #
+#                                                                              #
+#  licensed under the apache license, version 2.0 (the "license");             #
+#  you may not use this file except in compliance with the license.            #
+#                                                                              #
+#  you may obtain a copy of the license at                                     #
+#                                                                              #
+#                  http://www.apache.org/licenses/license-2.0                  #
+#                                                                              #
+#  unless required by applicable law or agreed to in writing, software         #
+#  distributed under the license is distributed on an "as is" basis,           #
+#  without warranties or conditions of any kind, either express or implied.    #
+#  see the license for the specific language governing permissions and         #
+#  limitations under the license.                                              #
+# ---------------------------------------------------------------------------- #
+
 from abc import abstractmethod
 import collections
 import gc
@@ -9,8 +31,15 @@ from torch import nn
 
 from vllm.config import LoadConfig, ModelConfig, VllmConfig
 
-from vllm.model_executor.model_loader.utils import set_default_torch_dtype, initialize_model
-from vllm.model_executor.model_loader import BaseModelLoader, get_model_loader, LoadFormats
+from vllm.model_executor.model_loader.utils import (
+    set_default_torch_dtype,
+    initialize_model,
+)
+from vllm.model_executor.model_loader import (
+    BaseModelLoader,
+    get_model_loader,
+    LoadFormats,
+)
 from vllm.executor.executor_base import ExecutorBase
 from vllm.executor.mp_distributed_executor import MultiprocessingDistributedExecutor
 from vllm.executor.uniproc_executor import UniProcExecutor
@@ -24,6 +53,7 @@ from flashtensors.config import get_storage_path
 from flashtensors.utils.logger import init_logger
 
 logger = init_logger(__name__)
+
 
 class FlashLLMLoader(BaseModelLoader):
     def __init__(self, load_config: LoadConfig):
@@ -56,6 +86,7 @@ class FlashLLMLoader(BaseModelLoader):
 
         def get_end_ptr(tensor: torch.Tensor) -> int:
             return tensor.view(-1)[-1].data_ptr() + tensor.element_size()
+
         logger.debug("Starting tensor filtering process")
         result = {}
         for group in same_storage_groups.values():
@@ -76,7 +107,9 @@ class FlashLLMLoader(BaseModelLoader):
                     result[k] = t
         return result
 
-    def load_model(self, *, vllm_config: VllmConfig, model_config: ModelConfig) -> nn.Module:
+    def load_model(
+        self, *, vllm_config: VllmConfig, model_config: ModelConfig
+    ) -> nn.Module:
         logger.info("🚀 Starting FlashLLMLoader.load_model")
         from vllm.distributed import get_tensor_model_parallel_rank
 
@@ -133,12 +166,16 @@ class FlashLLMLoader(BaseModelLoader):
 
             # Check if model_path is None or empty
             if not model_path:
-                raise ValueError(f"Model path is empty or None: '{model_path}'. Local path: {local_model_path}, Storage path: {storage_path}")
+                raise ValueError(
+                    f"Model path is empty or None: '{model_path}'. Local path: {local_model_path}, Storage path: {storage_path}"
+                )
 
             logger.info(f"🔄 Loading tensors from model_path='{model_path}'")
             # Note: we need to pass storage_path to load_dict for proper path resolution
             sllm_state_dict = load_dict(model_path, device_map, storage_path)
-            logger.info(f"✅ Successfully loaded {len(sllm_state_dict)} tensors from storage")
+            logger.info(
+                f"✅ Successfully loaded {len(sllm_state_dict)} tensors from storage"
+            )
 
             for key, param in model.named_parameters(recurse=True):
                 if key in key_list:
@@ -186,7 +223,6 @@ def patch_model_loader(load_config: LoadConfig):
         return FlashLLMLoader(load_config=load_config)
 
     return get_model_loader(load_config)
-    
 
 
 @abstractmethod
@@ -253,15 +289,15 @@ def save_llm_state_executor_uniproc(
         args=(path, pattern, max_size),
     )
 
-    
+
 def activate():
     os.environ["VLLM_USE_V1"] = "0"
     ExtendedLoadFormats = Union[LoadFormats, Literal["flash"]]
 
-    #_original_annotations_load_config = LoadConfig.__annotations__.copy()
-    LoadConfig.__annotations__['load_format'] = Union[str, ExtendedLoadFormats]
-    EngineArgs.__annotations__['load_format'] = Union[str, ExtendedLoadFormats]
-        
+    # _original_annotations_load_config = LoadConfig.__annotations__.copy()
+    LoadConfig.__annotations__["load_format"] = Union[str, ExtendedLoadFormats]
+    EngineArgs.__annotations__["load_format"] = Union[str, ExtendedLoadFormats]
+
     model_loader.get_model_loader = patch_model_loader
     setattr(ExecutorBase, "save_llm_state", save_llm_state)
     setattr(MultiprocessingDistributedExecutor, "save_llm_state", save_llm_state_impl)
