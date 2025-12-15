@@ -1,6 +1,7 @@
 import modal
 import logging
 from benchmarks.device_benchmark import hardware_stats
+from benchmarks.flashtensors_benchmark import test_create_flashtensor
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -71,7 +72,8 @@ GPU_MAP = {
 }
 
 FUNCTION_MAP = {
-    "hardware_stats": hardware_stats,
+    # "hardware_stats": hardware_stats,
+    "flashtensors": test_create_flashtensor,
 }
 
 
