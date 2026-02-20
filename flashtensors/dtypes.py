@@ -14,6 +14,10 @@ class DType(BaseModel):
         return getattr(torch, self.torch_name)
 
     def asnumpy(self):
+        if self.numpy_name == "bfloat16":
+            raise TypeError(
+                "bfloat16 has no NumPy equivalent; use uint16 as the storage dtype"
+            )
         return np.dtype(self.numpy_name)
 
 
