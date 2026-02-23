@@ -1,4 +1,5 @@
 import os
+import sys
 import ctypes
 import ctypes.util
 
@@ -19,14 +20,18 @@ _libc.pread.argtypes = [
 
 POSIX_FADV_SEQUENTIAL = 2
 
-# int posix_fadvise(int fd, off_t offset, off_t len, int advice)
-_libc.posix_fadvise.restype = ctypes.c_int
-_libc.posix_fadvise.argtypes = [
-    ctypes.c_int,
-    ctypes.c_long,
-    ctypes.c_long,
-    ctypes.c_int,
-]
+# posix_fadvise is not available on macOS/Darwin
+_has_posix_fadvise = sys.platform != "darwin" and hasattr(_libc, "posix_fadvise")
+
+if _has_posix_fadvise:
+    # int posix_fadvise(int fd, off_t offset, off_t len, int advice)
+    _libc.posix_fadvise.restype = ctypes.c_int
+    _libc.posix_fadvise.argtypes = [
+        ctypes.c_int,
+        ctypes.c_long,
+        ctypes.c_long,
+        ctypes.c_int,
+    ]
 
 
 _BLOCK_SIZE = 4096  # O_DIRECT alignment (covers both 512-byte and 4Kn sectors)
@@ -71,6 +76,8 @@ def _resolve_device(name: str, device_map: dict):
     if isinstance(dev, str):
         if dev == "cpu":
             return ("cpu", None)
+        if dev == "mps":
+            return ("mps", None)
         if dev.startswith("cuda"):
             if ":" in dev:
                 return ("cuda", int(dev.split(":")[1]))

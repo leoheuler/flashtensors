@@ -7,6 +7,7 @@ import numpy as np
 from ._base import BaseLoader
 from ._common import (
     _libc,
+    _has_posix_fadvise,
     POSIX_FADV_SEQUENTIAL,
     _pread_all,
     _resolve_device,
@@ -61,7 +62,8 @@ class CpuLoader(BaseLoader):
         result = {}
         fd = os.open(data_path, os.O_RDONLY)
         try:
-            _libc.posix_fadvise(fd, 0, file_size, POSIX_FADV_SEQUENTIAL)
+            if _has_posix_fadvise:
+                _libc.posix_fadvise(fd, 0, file_size, POSIX_FADV_SEQUENTIAL)
 
             if num_workers == 1 or len(layout) == 1:
                 for ref in layout:

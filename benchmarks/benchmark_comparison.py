@@ -22,7 +22,7 @@ app = modal.App("flashtensors-comparison-benchmark")
 
 image = (
     modal.Image.debian_slim()
-    .pip_install("torch", "cupy-cuda12x", "pydantic", "tqdm", "numpy", "safetensors", "packaging")
+    .pip_install("torch", "cupy-cuda12x", "pydantic", "tqdm", "numpy", "safetensors", "packaging", "kvikio-cu12")
     .add_local_dir("/workspaces/flashtensors/flashtensors", remote_path="/pkg/flashtensors")
 )
 
@@ -70,6 +70,7 @@ def _run():
     sys.path.insert(0, "/pkg")
 
     import gc
+    import json
     import mmap
     import os
     import tempfile
@@ -189,7 +190,7 @@ def _run():
                   f"  ({100*results['sf_gbs']/raw_disk_gbs:.0f}% of disk, "
                   f"{100*results['sf_gbs']/raw_h2d_gbs:.0f}% of PCIe)")
 
-            # flashtensors — sweep num_workers
+            # flashtensors (SLLM pipeline) — sweep num_workers
             ft_best_gbs = 0
             ft_best_workers = 1
             for nw in [1, 2, 4, 8]:
@@ -210,31 +211,80 @@ def _run():
             results["ft_gbs"] = ft_best_gbs
             results["ft_best_workers"] = ft_best_workers
 
+            # flashtensors GDS (kvikio) — if available
+            gds_available = False
+            gds_compat = True
+            try:
+                import kvikio
+                gds_available = True
+                gds_compat = kvikio.defaults.compat_mode()
+            except Exception:
+                pass
+
+            if gds_available:
+                mode_label = "compat" if gds_compat else "GDS"
+                from flashtensors.loaders._gds import GdsLoader
+                from flashtensors.flash_state import FlashState
+
+                index_path = os.path.join(ft_path, "tensor_index.json")
+                data_file_path = os.path.join(ft_path, "tensor.flashtensors")
+                with open(index_path) as f:
+                    flash_state = FlashState(**json.load(f))
+                gds_file_size = os.path.getsize(data_file_path)
+
+                def _ft_gds_load():
+                    loader = GdsLoader(device_id=0)
+                    sd = loader.load(data_file_path, gds_file_size, flash_state.layout,
+                                     {"": 0}, 1, 64 * 1024 * 1024)
+                    torch.cuda.synchronize()
+                    del sd
+                    torch.cuda.empty_cache()
+                    cupy.get_default_memory_pool().free_all_blocks()
+
+                t = _time_fn(_ft_gds_load)
+                gds_gbs = actual_gb / t
+                results["gds_gbs"] = gds_gbs
+                print(f"    flashtensors GDS ({mode_label}): {t:.2f}s  ({gds_gbs:.2f} GB/s)"
+                      f"  ({100*gds_gbs/raw_disk_gbs:.0f}% of disk, "
+                      f"{100*gds_gbs/raw_h2d_gbs:.0f}% of PCIe)")
+            else:
+                results["gds_gbs"] = None
+                print(f"    flashtensors GDS: skipped (kvikio not available)")
+
         all_results.append(results)
         gc.collect()
 
     # ── Summary table ──────────────────────────────────────────────────────
-    print(f"\n{'='*68}")
+    has_gds = any(r.get("gds_gbs") is not None for r in all_results)
+    gds_col = f"  {'GDS':>10}" if has_gds else ""
+
+    print(f"\n{'='*78}")
     print(f"  Summary — disk→GPU load throughput (GB/s)")
-    print(f"{'─'*68}")
+    print(f"{'─'*78}")
     print(f"  {'Size':>5}  {'Disk ceil':>10}  {'PCIe ceil':>10}  "
-          f"{'torch':>8}  {'safetensors':>12}  {'flashtensors':>13}")
-    print(f"{'─'*68}")
+          f"{'torch':>8}  {'safetensors':>12}  {'flashtensors':>13}{gds_col}")
+    print(f"{'─'*78}")
     for r in all_results:
+        gds_str = f"  {r['gds_gbs']:>9.2f}x" if r.get("gds_gbs") is not None else (
+            f"  {'n/a':>10}" if has_gds else "")
         print(f"  {r['size_gb']:>4.0f}G"
               f"  {r['raw_disk_gbs']:>9.2f}x"
               f"  {r['raw_h2d_gbs']:>9.2f}x"
               f"  {r['torch_gbs']:>7.2f}x"
               f"  {r['sf_gbs']:>11.2f}x"
-              f"  {r['ft_gbs']:>12.2f}x")
-    print(f"{'─'*68}")
+              f"  {r['ft_gbs']:>12.2f}x{gds_str}")
+    print(f"{'─'*78}")
     r = all_results[-1]
     print(f"  Speedup flashtensors vs torch.load:   {r['ft_gbs']/r['torch_gbs']:.1f}x")
     print(f"  Speedup flashtensors vs safetensors:  {r['ft_gbs']/r['sf_gbs']:.1f}x")
     print(f"  flashtensors best num_workers:        {r['ft_best_workers']}")
     print(f"  flashtensors % of disk ceiling:       {100*r['ft_gbs']/r['raw_disk_gbs']:.0f}%")
     print(f"  flashtensors % of PCIe ceiling:       {100*r['ft_gbs']/r['raw_h2d_gbs']:.0f}%")
-    print(f"{'='*68}\n")
+    if r.get("gds_gbs") is not None:
+        print(f"  GDS % of disk ceiling:               {100*r['gds_gbs']/r['raw_disk_gbs']:.0f}%")
+        print(f"  GDS % of PCIe ceiling:               {100*r['gds_gbs']/r['raw_h2d_gbs']:.0f}%")
+        print(f"  GDS vs SLLM pipeline:                {r['gds_gbs']/r['ft_gbs']:.2f}x")
+    print(f"{'='*78}\n")
 
     return all_results
 
