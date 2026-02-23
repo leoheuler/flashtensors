@@ -100,7 +100,8 @@ def _run_tests():
         check("device_map/cuda_string", all(v.device.type == "cuda" for v in loaded.values()))
 
         # per-tensor key takes precedence
-        loaded = load_dict(d, {"a": 0, "b": "cpu"})
+        loaded = load_dic
+        t(d, {"a": 0, "b": "cpu"})
         check("device_map/per_tensor",
               loaded["a"].device.type == "cuda" and loaded["b"].device.type == "cpu")
 
