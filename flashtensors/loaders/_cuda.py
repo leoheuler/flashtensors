@@ -8,6 +8,7 @@ import numpy as np
 from ._base import BaseLoader
 from ._common import (
     _libc,
+    _has_posix_fadvise,
     POSIX_FADV_SEQUENTIAL,
     _BLOCK_SIZE,
     _align_up,
@@ -69,7 +70,7 @@ def _sllm_pipeline(fd, file_size, device_id, chunk_size, num_readers, cupy, use_
                 except queue.Empty:
                     return
                 buf_idx = free_q.get()  # wait for a free pinned buffer
-                read_count = _align_up(chunk_len, _BLOCK_SIZE) if use_o_direct else chunk_len
+                read_count = min(_align_up(chunk_len, _BLOCK_SIZE), file_size - file_off) if use_o_direct else chunk_len
                 _pread_all(fd, pinned[buf_idx].ptr, read_count, file_off)
                 ready_q.put((buf_idx, file_off, chunk_len))
         except Exception as e:
@@ -189,7 +190,7 @@ class CudaLoader(BaseLoader):
             fd = os.open(data_path, os.O_RDONLY)
             use_o_direct = False
         try:
-            if not use_o_direct:
+            if not use_o_direct and _has_posix_fadvise:
                 _libc.posix_fadvise(fd, 0, file_size, POSIX_FADV_SEQUENTIAL)
             gpu_pool = _sllm_pipeline(
                 fd, file_size, self._device_id, chunk_size, num_workers, cupy,
